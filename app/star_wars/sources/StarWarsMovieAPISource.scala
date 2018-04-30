@@ -43,7 +43,7 @@ class StarWarsMovieAPISource @Inject() (
     }
 
     override def getCharactersForMovie(movie_id: String): Future[Seq[StarWarsCharacter]] = {
-        
+
         Future { Nil }
     }
 
