@@ -16,20 +16,17 @@ bash ./sbt run
 
 And then go to <http://localhost:9000> to see the running web application.
 
+To run tests:
+```bash
+sbt test
+```
+
+
 ## Routes
 
 
-GET star_wars/movies
+# GET star_wars/movies
 Returns the list of movies grouped by director
-```
-RESPONSE
 
-
-```
-
-GET star_wars/characters/:movie_id
+# GET star_wars/characters/:movie_id
 Returns the list of characters given a certain movie
-```
-RESPONSE
-
-```
