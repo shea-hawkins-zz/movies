@@ -1,12 +1,12 @@
 package star_wars
 
-import exceptions.InvalidResponseException
+import exceptions.NoResultsException
 import javax.inject.{Inject, Singleton}
-import play.api.libs.json.Json
-import play.api.mvc.{AbstractController, ControllerComponents}
+import play.api.libs.json.{Json, Writes}
+import play.api.mvc.{AbstractController, ControllerComponents, Result}
 import star_wars.sources.StarWarsMovieSource
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class StarWarsController @Inject()(
@@ -15,8 +15,16 @@ class StarWarsController @Inject()(
 )(implicit exec: ExecutionContext) extends AbstractController(cc) {
 
     def getMoviesByDirector = Action.async {
+        handleResponse(movie_source.getMoviesByDirector)
+    }
 
-        movie_source.getMoviesByDirector.map(
+
+    def getCharactersForMovie(movie_id: String) = Action.async {
+        handleResponse(movie_source.getCharactersForMovie(movie_id))
+    }
+
+    private def handleResponse[ResponseFormat: Writes](result: Future[ResponseFormat]): Future[Result]= {
+        result.map(
             movies => {
                 Ok(
                     Json.obj(
@@ -25,12 +33,12 @@ class StarWarsController @Inject()(
                 )
             }
         ).recover {
-            case e: InvalidResponseException =>
+            case e: NoResultsException =>
             {
 
-                InternalServerError(
+                NotFound(
                     Json.obj(
-                        "error" -> ("Received an invalid response from the force: " + e.getMessage)
+                        "results" -> Nil
                     )
                 )
             }
