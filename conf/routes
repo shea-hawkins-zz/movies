@@ -3,6 +3,6 @@
 # ~~~~
 
 # A
-#GET     /star_wars/movies                  star_wars.StarWarsController
+GET     /star_wars/movies                  star_wars.StarWarsController.getMoviesByDirector
 # An example controller showing how to use dependency injection
 #GET     /star_wars/characters/:movie_id    star_wars.StarWarsController
